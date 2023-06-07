@@ -1,0 +1,7 @@
+obj/Debug/net6.0/Protobuf/contract/HelloWorldContract.c.cs \
+obj/Debug/net6.0/Protobuf/contract/HelloWorldContract.cs: /Users/aelf/.nuget/packages/aelf.tools/1.0.0-alpha/build/native/include/aelf/core.proto\
+ /Users/aelf/.nuget/packages/aelf.tools/1.0.0-alpha/build/native/include/google/protobuf/descriptor.proto\
+ /Users/aelf/.nuget/packages/aelf.tools/1.0.0-alpha/build/native/include/aelf/options.proto\
+ /Users/aelf/.nuget/packages/aelf.tools/1.0.0-alpha/build/native/include/google/protobuf/empty.proto\
+ /Users/aelf/.nuget/packages/aelf.tools/1.0.0-alpha/build/native/include/google/protobuf/wrappers.proto\
+ Protobuf/contract/hello_world_contract.proto

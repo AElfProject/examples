@@ -1,0 +1,5 @@
+/Users/aelf/contracts/hellowworld/test/obj/Debug/net6.0/AElf.Contracts.HellowWorld.Tests.csproj.AssemblyReference.cache
+/Users/aelf/contracts/hellowworld/test/obj/Debug/net6.0/AElf.Contracts.HellowWorld.Tests.GeneratedMSBuildEditorConfig.editorconfig
+/Users/aelf/contracts/hellowworld/test/obj/Debug/net6.0/AElf.Contracts.HellowWorld.Tests.AssemblyInfoInputs.cache
+/Users/aelf/contracts/hellowworld/test/obj/Debug/net6.0/AElf.Contracts.HellowWorld.Tests.AssemblyInfo.cs
+/Users/aelf/contracts/hellowworld/test/obj/Debug/net6.0/AElf.Contracts.HellowWorld.Tests.csproj.CoreCompileInputs.cache
