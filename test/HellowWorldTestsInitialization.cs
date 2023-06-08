@@ -9,7 +9,6 @@ namespace Com.Contracts.HellowWorld
     {
         // private readonly ECKeyPair KeyPair;
         private readonly HellowWorldContainer.HellowWorldStub HellowWorldStub;
-        private readonly TokenContractContainer.TokenContractStub TokenContractStub;
         protected ECKeyPair DefaultKeyPair => Accounts[0].KeyPair;
         protected Address DefaultAddress => Accounts[0].Address;
         protected ECKeyPair UserKeyPair => Accounts[1].KeyPair;
@@ -19,8 +18,6 @@ namespace Com.Contracts.HellowWorld
         {
             // KeyPair = SampleAccount.Accounts.First().KeyPair;
             HellowWorldStub = GetContractStub<HellowWorldContainer.HellowWorldStub>(DefaultKeyPair);
-            TokenContractStub = GetTester<TokenContractContainer.TokenContractStub>(
-                GetAddress(TokenSmartContractAddressNameProvider.StringName), DefaultKeyPair);
         }
     }
     

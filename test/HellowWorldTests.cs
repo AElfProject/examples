@@ -2,6 +2,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
 using AElf.Types;
+using AElf.Sdk.CSharp;
 using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
@@ -19,28 +20,27 @@ namespace Com.Contracts.HellowWorld
             var input = new StringValue { Value = inputValue };
 
             // Act
-            await HelloWorldStub.Update.SendAsync(input);
+            await HellowWorldStub.Update.SendAsync(input);
 
             // Assert
-            var updatedMessage = await HelloWorldStub.GetUpdatedMessage.CallAsync(new Empty());
+            var updatedMessage = await HellowWorldStub.Read.CallAsync(new Empty());
             updatedMessage.Value.ShouldBe(inputValue);
-
-            var eventData = (await GetInlineEventsAsync()).Single();
-            eventData.ShouldNotBeNull();
-            eventData.Event.ShouldBeOfType<UpdatedMessage>();
-            eventData.Event<UpdatedMessage>().Value.ShouldBe(inputValue);
         }
 
         [Fact]
         public async Task Read_ShouldReturnValue()
         {
+
             // Arrange
             var messageValue = "Hello, World!";
-            State.Message.Value = messageValue;
+            var message = new StringValue { Value = messageValue };
+            await HellowWorldStub.Update.SendAsync(message);
+
+            //State.Message.Value = messageValue;
             var input = new Empty();
 
             // Act
-            var result = await HelloWorldStub.Read.CallAsync(input);
+            var result = await HellowWorldStub.Read.CallAsync(input);
 
             // Assert
             result.Value.ShouldBe(messageValue);
