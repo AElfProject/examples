@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+import "aelf/core.proto";
+import "aelf/options.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "AElf.Contracts.Timelock";
+
+service TimelockContract {
+  option (aelf.csharp_state) = "AElf.Contracts.Timelock.TimelockContractState";
+
+  // Actions
+  rpc SetDelay (DelayInput) returns (google.protobuf.Empty) {}
+  rpc AcceptAdmin (google.protobuf.Empty) returns (google.protobuf.Empty) {}
+  rpc SetPendingAdmin (SetPendingAdminInput) returns (google.protobuf.Empty) {}
+  rpc QueueTransaction (TransactionInput) returns (google.protobuf.Empty) {}
+  rpc ExecuteTransaction (TransactionInput) returns (google.protobuf.Empty) {}
+  rpc CancelTransaction (TransactionInput) returns (google.protobuf.Empty) {}
+  
+}
+
+// Params
+message DelayInput {
+  uint64 delay = 1;
+}
+
+message SetPendingAdminInput {
+  aelf.Address pending_admin = 1;
+}
+
+message TransactionInput {
+  aelf.Hash txn_hash = 1;
+  aelf.Address target = 2;
+  uint64 amount = 3;
+  string signature = 4;
+  string data = 5;
+  google.protobuf.Timestamp eta = 6;
+}
+
+// Events
+message NewAdmin {
+  option (aelf.is_event) = true;
+  aelf.Address new_admin = 1;
+}
+
+message NewPendingAdmin {
+  option (aelf.is_event) = true;
+  aelf.Address new_pending_admin = 1;
+}
+
+message NewDelay {
+  option (aelf.is_event) = true;
+  uint64 new_delay = 1;
+}
+
+message QueueTransaction {
+  option (aelf.is_event) = true;
+  aelf.Hash txn_hash = 1;
+  aelf.Address target = 2;
+  uint64 amount = 3;
+  string signature = 4;
+  string data = 5;
+  google.protobuf.Timestamp eta = 6;
+}
+
+message ExecuteTransaction {
+  option (aelf.is_event) = true;
+  aelf.Hash txn_hash = 1;
+  aelf.Address target = 2;
+  uint64 amount = 3;
+  string signature = 4;
+  string data = 5;
+  google.protobuf.Timestamp eta = 6;
+}
+
+message CancelTransaction {
+  option (aelf.is_event) = true;
+  aelf.Hash txn_hash = 1;
+  aelf.Address target = 2;
+  uint64 amount = 3;
+  string signature = 4;
+  string data = 5;
+  google.protobuf.Timestamp eta = 6;
+}
