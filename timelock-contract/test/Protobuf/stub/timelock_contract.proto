@@ -12,13 +12,34 @@ service TimelockContract {
   option (aelf.csharp_state) = "AElf.Contracts.Timelock.TimelockContractState";
 
   // Actions
-  rpc SetDelay (DelayInput) returns (google.protobuf.Empty) {}
-  rpc AcceptAdmin (google.protobuf.Empty) returns (google.protobuf.Empty) {}
-  rpc SetPendingAdmin (SetPendingAdminInput) returns (google.protobuf.Empty) {}
-  rpc QueueTransaction (TransactionInput) returns (google.protobuf.Empty) {}
-  rpc ExecuteTransaction (TransactionInput) returns (google.protobuf.Empty) {}
-  rpc CancelTransaction (TransactionInput) returns (google.protobuf.Empty) {}
-  
+  rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {
+  }
+  rpc SetDelay (DelayInput) returns (google.protobuf.Empty) {
+  }
+  rpc AcceptAdmin (google.protobuf.Empty) returns (google.protobuf.Empty) {
+  }
+  rpc SetPendingAdmin (SetPendingAdminInput) returns (google.protobuf.Empty) {
+  }
+  rpc QueueTransaction (TransactionInput) returns (google.protobuf.Empty) {
+  }
+  rpc ExecuteTransaction (TransactionInput) returns (google.protobuf.Empty) {
+  }
+  rpc CancelTransaction (TransactionInput) returns (google.protobuf.Empty) {
+  }
+
+  // View
+  rpc GetDelay (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+    option (aelf.is_view) = true;
+  }
+  rpc GetPendingAdmin (google.protobuf.Empty) returns (aelf.Address) {
+    option (aelf.is_view) = true;
+  }
+  rpc GetAdmin (google.protobuf.Empty) returns (aelf.Address) {
+    option (aelf.is_view) = true;
+  }
+  rpc GetTransaction(aelf.Hash) returns (aelf.Address) {
+    option (aelf.is_view) = true;
+  }
 }
 
 // Params

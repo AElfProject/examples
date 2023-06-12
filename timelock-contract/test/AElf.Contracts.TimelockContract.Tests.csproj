@@ -3,6 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>AElf.Contracts.Timelock</RootNamespace>
+        <RestoreSources>http://10.0.1.239:8081/repository/nuget-group/index.json</RestoreSources>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -10,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Boilerplate.TestBase" Version="1.0.1" />
+        <PackageReference Include="AElf.Boilerplate.TestBase" Version="0.0.1" />
         <PackageReference Include="AElf.EconomicSystem" Version="1.3.0" />
         <PackageReference Include="AElf.GovernmentSystem" Version="1.3.0" />
         <PackageReference Include="coverlet.msbuild" Version="2.5.1" />
@@ -20,7 +21,7 @@
         <PackageReference Include="xunit.runner.console" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
         <PackageReference Include="AElf.ContractTestKit" Version="1.3.0" />
-        <PackageReference Include="AElf.Tools" Version="1.0.58">
+        <PackageReference Include="AElf.Tools" Version="0.0.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -39,7 +40,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\AElf.Contracts.Timelock.csproj" />
+        <ProjectReference Include="..\src\AElf.Contracts.TimelockContract.csproj" />
     </ItemGroup>
 
 </Project>

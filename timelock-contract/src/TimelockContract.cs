@@ -8,6 +8,19 @@ namespace AElf.Contracts.Timelock
 {
     public partial class TimelockContract : TimelockContractContainer.TimelockContractBase
     {
+        public override Empty Initialize(Empty input)
+        {
+            if (State.Initialized.Value)
+            {
+                return new Empty();
+            }
+            State.TokenContract.Value =
+                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
+            State.Admin.Value = Context.Sender;
+            State.Initialized.Value = true;
+            return new Empty();
+        }
+        
         public override Empty SetDelay(DelayInput input)
         {
             Assert(State.Admin.Value == Context.Sender, "No permission");
@@ -23,21 +36,25 @@ namespace AElf.Contracts.Timelock
             return new Empty();
         }
 
+        // todo [confirm] admin to accept or pendingAdmin accept?
         public override Empty AcceptAdmin(Empty input)
         {
-            Assert(Context.Sender == State.PendingAdmin.Value, "No permission");
-            State.Admin.Value = Context.Sender;
+            // Assert(Context.Sender == State.PendingAdmin.Value, "No permission");
+            Assert(State.Admin.Value == Context.Sender, "No permission");
+            Assert(State.PendingAdmin.Value != null, "PendingAdmin must not be null");
+            State.Admin.Value = State.PendingAdmin.Value;
             State.PendingAdmin.Value = null;
             Context.Fire(new NewAdmin
             {
-                NewAdmin_ = Context.Sender
+                NewAdmin_ = State.PendingAdmin.Value
             });
             return new Empty();
         }
 
         public override Empty SetPendingAdmin(SetPendingAdminInput input)
         {
-            Assert(Context.Sender == Context.Self, "No permission");
+            // Assert(Context.Sender == Context.Self, "No permission");
+            Assert(State.Admin.Value == Context.Sender, "No permission");
             State.PendingAdmin.Value = input.PendingAdmin;
             Context.Fire(new NewPendingAdmin
             {

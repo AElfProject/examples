@@ -8,8 +8,8 @@ namespace AElf.Contracts.Timelock
     public partial class TimelockContractTests
     {
         // private readonly ECKeyPair KeyPair;
-        private readonly TimelockContractContainer.TimelockContractStub TimelockContractStub;
-        private readonly TokenContractContainer.TokenContractStub TokenContractStub;
+        internal TimelockContractContainer.TimelockContractStub TimelockContractStub;
+        internal TokenContractContainer.TokenContractStub TokenContractStub;
         protected ECKeyPair DefaultKeyPair => Accounts[0].KeyPair;
         protected Address DefaultAddress => Accounts[0].Address;
         protected ECKeyPair UserKeyPair => Accounts[1].KeyPair;

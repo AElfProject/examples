@@ -18,6 +18,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="obj\Debug\net6.0\Protobuf\**" />
+    </ItemGroup>
     
 </Project>
     
