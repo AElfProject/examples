@@ -43,4 +43,41 @@
         <ProjectReference Include="..\src\AElf.Contracts.TimelockContract.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="obj\AElf.Contracts.TimelockContract.Tests.csproj.nuget.dgspec.json" />
+      <Content Include="obj\AElf.Contracts.TimelockContract.Tests.csproj.nuget.g.props" />
+      <Content Include="obj\AElf.Contracts.TimelockContract.Tests.csproj.nuget.g.targets" />
+      <Content Include="obj\Debug\net6.0\1815de10cd375fe2_timelock_contract.protodep" />
+      <Content Include="obj\Debug\net6.0\1815de10cd375fe2_token_contract.protodep" />
+      <Content Include="obj\Debug\net6.0\1f66cb475763062f_acs1.protodep" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.AssemblyInfoInputs.cache" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.assets.cache" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.AssemblyReference.cache" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.CopyComplete" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.CoreCompileInputs.cache" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.FileListAbsolute.txt" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.dll" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.GeneratedMSBuildEditorConfig.editorconfig" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.genruntimeconfig.cache" />
+      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.pdb" />
+      <Content Include="obj\Debug\net6.0\c3e4ef2a4648ba32_authority_info.protodep" />
+      <Content Include="obj\Debug\net6.0\refint\AElf.Contracts.TimelockContract.Tests.dll" />
+      <Content Include="obj\Debug\net6.0\ref\AElf.Contracts.TimelockContract.Tests.dll" />
+      <Content Include="obj\project.assets.json" />
+      <Content Include="obj\project.nuget.cache" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Include="obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
+      <Compile Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.AssemblyInfo.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\base\Acs1.c.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\base\Acs1.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\message\AuthorityInfo.c.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\message\AuthorityInfo.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TimelockContract.c.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TimelockContract.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TokenContract.c.cs" />
+      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TokenContract.cs" />
+    </ItemGroup>
+
 </Project>

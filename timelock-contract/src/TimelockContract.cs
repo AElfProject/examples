@@ -36,17 +36,15 @@ namespace AElf.Contracts.Timelock
             return new Empty();
         }
 
-        // todo [confirm] admin to accept or pendingAdmin accept?
-        public override Empty AcceptAdmin(Empty input)
+        public override Empty AcceptAdmin(SetPendingAdminInput input)
         {
             // Assert(Context.Sender == State.PendingAdmin.Value, "No permission");
             Assert(State.Admin.Value == Context.Sender, "No permission");
             Assert(State.PendingAdmin.Value != null, "PendingAdmin must not be null");
-            State.Admin.Value = State.PendingAdmin.Value;
-            State.PendingAdmin.Value = null;
+            State.Admin.Value = input.PendingAdmin;
             Context.Fire(new NewAdmin
             {
-                NewAdmin_ = State.PendingAdmin.Value
+                NewAdmin_ = State.Admin.Value
             });
             return new Empty();
         }
