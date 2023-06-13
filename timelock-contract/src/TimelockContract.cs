@@ -36,12 +36,12 @@ namespace AElf.Contracts.Timelock
             return new Empty();
         }
 
-        public override Empty AcceptAdmin(SetPendingAdminInput input)
+        public override Empty AcceptAdmin(Empty input)
         {
             // Assert(Context.Sender == State.PendingAdmin.Value, "No permission");
             Assert(State.Admin.Value == Context.Sender, "No permission");
             Assert(State.PendingAdmin.Value != null, "PendingAdmin must not be null");
-            State.Admin.Value = input.PendingAdmin;
+            State.Admin.Value = State.PendingAdmin.Value;
             Context.Fire(new NewAdmin
             {
                 NewAdmin_ = State.Admin.Value

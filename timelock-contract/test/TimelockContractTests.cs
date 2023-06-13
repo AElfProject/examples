@@ -1,12 +1,8 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Timers;
 using AElf.Contracts.MultiToken;
+using AElf.Kernel;
 using AElf.Types;
-using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Shouldly;
 using Xunit;
 
 namespace AElf.Contracts.Timelock
@@ -37,7 +33,7 @@ namespace AElf.Contracts.Timelock
             SetPendingAdminInput input = new SetPendingAdminInput();
             input.PendingAdmin = UserAddress;
             await TimelockContractStub.SetPendingAdmin.SendAsync(input);
-            await TimelockContractStub.AcceptAdmin.SendAsync(input);
+            await TimelockContractStub.AcceptAdmin.SendAsync(new Empty());
             var result = await TimelockContractStub.GetAdmin.CallAsync(new Empty());
             result.ShouldBe(UserAddress);
         }
@@ -51,7 +47,7 @@ namespace AElf.Contracts.Timelock
                 Target = UserAddress,
                 Amount = 3L,
                 Data = "",
-                Eta = new Timestamp(),
+                Eta = TimestampHelper.GetUtcNow(),
                 Signature = "sign"
             };
             Hash txnHash = HashHelper.ComputeFrom(input);
@@ -69,7 +65,7 @@ namespace AElf.Contracts.Timelock
                 Target = UserAddress,
                 Amount = 3L,
                 Data = "",
-                Eta = new Timestamp(),
+                Eta = TimestampHelper.GetUtcNow(),
                 Signature = "sign"
             };
             Hash txnHash = HashHelper.ComputeFrom(input);
@@ -105,7 +101,7 @@ namespace AElf.Contracts.Timelock
                 Target = UserAddress,
                 Amount = 5L,
                 Data = "",
-                Eta = new Timestamp(),
+                Eta = TimestampHelper.GetUtcNow(),
                 Signature = "sign"
             };
             await TimelockContractStub.QueueTransaction.SendAsync(input);
