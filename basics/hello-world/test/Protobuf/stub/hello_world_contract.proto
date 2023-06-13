@@ -5,10 +5,10 @@ import "aelf/options.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
-option csharp_namespace = "Com.Contracts.HellowWorld";
+option csharp_namespace = "AElf.Contracts.HelloWorld";
 
-service HellowWorld {
-  option (aelf.csharp_state) = "Com.Contracts.HellowWorld.HellowWorldState";
+service HelloWorld {
+  option (aelf.csharp_state) = "AElf.Contracts.HelloWorld.HelloWorldState";
 
   // Actions
   rpc Update (google.protobuf.StringValue) returns (google.protobuf.Empty) {

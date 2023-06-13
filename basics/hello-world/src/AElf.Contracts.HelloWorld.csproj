@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-        <RootNamespace>Com.Contracts.HellowWorld</RootNamespace>
+        <RootNamespace>AElf.Contracts.HelloWorld</RootNamespace>
         <IsContract>true</IsContract>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -13,21 +13,10 @@
 
     <ItemGroup>
         <PackageReference Include="AElf.Sdk.CSharp" Version="1.3.0" />
-        <PackageReference Include="AElf.Tools" Version="1.0.0-Alpha">
+        <PackageReference Include="AElf.Tools" Version="1.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="HellowWorldHelpers.cs" />
-      <Compile Remove="HellowWorldConstants.cs" />
-      <Compile Remove="ContractsReferences.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Protobuf\message" />
-      <Folder Include="Protobuf\reference" />
     </ItemGroup>
 
 </Project>

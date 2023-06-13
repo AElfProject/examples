@@ -1,15 +1,11 @@
-using Google.Protobuf.WellKnownTypes;
-using System.Linq;
-using AElf;
-using AElf.CSharp.Core;
 using AElf.Sdk.CSharp;
-using AElf.Types;
+using Google.Protobuf.WellKnownTypes;
 
-namespace Com.Contracts.HellowWorld
+namespace AElf.Contracts.HelloWorld
 {
-    public partial class HellowWorld : HellowWorldContainer.HellowWorldBase
+    public partial class HelloWorld : HelloWorldContainer.HelloWorldBase
     {
-        //Method to update the message value. 
+        // Method to update the message value. 
         public override Empty Update(StringValue input)
         {
             // Set the message value in the contract state
@@ -34,4 +30,5 @@ namespace Com.Contracts.HellowWorld
             return value;
         }
     }
+    
 }

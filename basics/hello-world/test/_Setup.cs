@@ -1,11 +1,10 @@
-﻿using AElf.Boilerplate.TestBase.Contract;
-using AElf.Boilerplate.TestBase.DAppContract;
-using AElf.Cryptography.ECDSA;
+﻿using AElf.Cryptography.ECDSA;
 using AElf.CSharp.Core;
+using AElf.Testing.TestBase;
 
-namespace Com.Contracts.HellowWorld
+namespace AElf.Contracts.HelloWorld
 {
-    public class Module : ContractTestModule<HellowWorld>
+    public class Module : ContractTestModule<HelloWorld>
     {
         
     }
@@ -13,10 +12,10 @@ namespace Com.Contracts.HellowWorld
     {
         // You can get address of any contract via GetAddress method, for example:
         // internal Address DAppContractAddress => GetAddress(DAppSmartContractAddressNameProvider.StringName);
-
         protected TStub GetContractStub<TStub>(ECKeyPair senderKeyPair) where TStub:ContractStubBase, new()
         {
             return GetTester<TStub>(DAppContractAddress, senderKeyPair);
         }
     }
+    
 }
