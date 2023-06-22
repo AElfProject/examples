@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
+using AElf.CSharp.Core;
 using AElf.Kernel;
 using AElf.Types;
 using Google.Protobuf;
@@ -111,7 +112,7 @@ namespace AElf.Contracts.Timelock
             await InitializeAsync();
             var balance1 = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput 
             {
-                Owner = UserAddress, 
+                Owner = DefaultAddress, 
                 Symbol = "ELF"
             });
             _testOutputHelper.WriteLine(balance1.Balance.ToString());
@@ -119,13 +120,21 @@ namespace AElf.Contracts.Timelock
             {
                 To = UserAddress,
                 Symbol = "ELF",
-                Amount = 500
+                Amount = 502
+            };
+            TransferFromInput transferFromInput = new TransferFromInput
+            {
+                From = DefaultAddress,
+                To = UserAddress,
+                Amount = 502,
+                Symbol = "ELF",
+                Memo = "TEST"
             };
             TransactionInput transactionInput = new TransactionInput
             {
                 Target = TokenContractAddress,
-                Method = "Transfer",
-                Data = transferInput.ToByteString(),
+                Method = "TransferFrom",
+                Data = transferFromInput.ToByteString(),
                 Eta = TimestampHelper.GetUtcNow(),
             };
             await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
@@ -136,7 +145,13 @@ namespace AElf.Contracts.Timelock
                 Owner = UserAddress, 
                 Symbol = "ELF"
             });
-            balance2.Balance.ShouldBe(500L);
+            var balance3 = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput 
+            {
+                Owner = DefaultAddress, 
+                Symbol = "ELF"
+            });
+            balance2.Balance.ShouldBe(502);
+            balance3.Balance.ShouldBe(balance1.Balance.Sub(502));
         }
         
     }
