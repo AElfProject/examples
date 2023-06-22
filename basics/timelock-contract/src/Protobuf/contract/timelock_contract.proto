@@ -16,9 +16,7 @@ service TimelockContract {
   }
   rpc SetDelay (DelayInput) returns (google.protobuf.Empty) {
   }
-  rpc AcceptAdmin (google.protobuf.Empty) returns (google.protobuf.Empty) {
-  }
-  rpc SetPendingAdmin (SetPendingAdminInput) returns (google.protobuf.Empty) {
+  rpc ChangeAdmin (ChangeAdminInput) returns (google.protobuf.Empty) {
   }
   rpc QueueTransaction (TransactionInput) returns (google.protobuf.Empty) {
   }
@@ -29,9 +27,6 @@ service TimelockContract {
 
   // View
   rpc GetDelay (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
-    option (aelf.is_view) = true;
-  }
-  rpc GetPendingAdmin (google.protobuf.Empty) returns (aelf.Address) {
     option (aelf.is_view) = true;
   }
   rpc GetAdmin (google.protobuf.Empty) returns (aelf.Address) {
@@ -47,28 +42,22 @@ message DelayInput {
   uint64 delay = 1;
 }
 
-message SetPendingAdminInput {
-  aelf.Address pending_admin = 1;
+message ChangeAdminInput {
+  aelf.Address new_admin = 1;
 }
 
 message TransactionInput {
   aelf.Hash txn_hash = 1;
   aelf.Address target = 2;
-  uint64 amount = 3;
-  string signature = 4;
-  string data = 5;
-  google.protobuf.Timestamp eta = 6;
+  string method = 3;
+  bytes data = 4;
+  google.protobuf.Timestamp eta = 5;
 }
 
 // Events
 message NewAdmin {
   option (aelf.is_event) = true;
   aelf.Address new_admin = 1;
-}
-
-message NewPendingAdmin {
-  option (aelf.is_event) = true;
-  aelf.Address new_pending_admin = 1;
 }
 
 message NewDelay {
@@ -80,28 +69,25 @@ message QueueTransaction {
   option (aelf.is_event) = true;
   aelf.Hash txn_hash = 1;
   aelf.Address target = 2;
-  uint64 amount = 3;
-  string signature = 4;
-  string data = 5;
-  google.protobuf.Timestamp eta = 6;
+  string method = 3;
+  bytes data = 4; // data equivalent to ConvertToByteString(IMessage)
+  google.protobuf.Timestamp eta = 5;
 }
 
 message ExecuteTransaction {
   option (aelf.is_event) = true;
   aelf.Hash txn_hash = 1;
   aelf.Address target = 2;
-  uint64 amount = 3;
-  string signature = 4;
-  string data = 5;
-  google.protobuf.Timestamp eta = 6;
+  string method = 3;
+  bytes data = 4;
+  google.protobuf.Timestamp eta = 5;
 }
 
 message CancelTransaction {
   option (aelf.is_event) = true;
   aelf.Hash txn_hash = 1;
   aelf.Address target = 2;
-  uint64 amount = 3;
-  string signature = 4;
-  string data = 5;
-  google.protobuf.Timestamp eta = 6;
+  string method = 3;
+  bytes data = 4;
+  google.protobuf.Timestamp eta = 5;
 }

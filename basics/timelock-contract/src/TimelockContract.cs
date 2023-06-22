@@ -1,4 +1,3 @@
-using AElf.Contracts.MultiToken;
 using AElf.CSharp.Core.Extension;
 using AElf.Sdk.CSharp;
 using AElf.Types;
@@ -36,27 +35,14 @@ namespace AElf.Contracts.Timelock
             return new Empty();
         }
 
-        public override Empty AcceptAdmin(Empty input)
+        public override Empty ChangeAdmin(ChangeAdminInput input)
         {
-            // Assert(Context.Sender == State.PendingAdmin.Value, "No permission");
-            Assert(State.Admin.Value == Context.Sender, "No permission");
-            Assert(State.PendingAdmin.Value != null, "PendingAdmin must not be null");
-            State.Admin.Value = State.PendingAdmin.Value;
+            Assert(Context.Sender == Context.Self, "No permission");
+            Assert(input.NewAdmin != null, "NewAdmin must not be null");
+            State.Admin.Value = input.NewAdmin;
             Context.Fire(new NewAdmin
             {
                 NewAdmin_ = State.Admin.Value
-            });
-            return new Empty();
-        }
-
-        public override Empty SetPendingAdmin(SetPendingAdminInput input)
-        {
-            // Assert(Context.Sender == Context.Self, "No permission");
-            Assert(State.Admin.Value == Context.Sender, "No permission");
-            State.PendingAdmin.Value = input.PendingAdmin;
-            Context.Fire(new NewPendingAdmin
-            {
-                NewPendingAdmin_ = input.PendingAdmin
             });
             return new Empty();
         }
@@ -71,8 +57,7 @@ namespace AElf.Contracts.Timelock
             {
                 TxnHash = txnHash,
                 Target = input.Target,
-                Amount = input.Amount,
-                Signature = input.Signature,
+                Method = input.Method,
                 Data = input.Data,
                 Eta = input.Eta
             });
@@ -88,8 +73,7 @@ namespace AElf.Contracts.Timelock
             {
                 TxnHash = txnHash,
                 Target = input.Target,
-                Amount = input.Amount,
-                Signature = input.Signature,
+                Method = input.Method,
                 Data = input.Data,
                 Eta = input.Eta
             });
@@ -105,21 +89,12 @@ namespace AElf.Contracts.Timelock
             Assert(Context.CurrentBlockTime <= input.Eta.AddDays(TimelockContractConstants.GRACE_PERIOD), "executeTransaction: Transaction is stale");
 
             Address from = State.TransactionQueue[txnHash];
-            State.TokenContract.Value = Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
-            State.TokenContract.TransferFrom.Send(new TransferFromInput
-            {
-                From = from,
-                To = input.Target,
-                Amount = (long) input.Amount,
-                Symbol = TimelockContractConstants.SYMBOL,
-                Memo = "Execution"
-            });
+            Context.SendInline(input.Target, input.Method, input.Data);
             Context.Fire(new ExecuteTransaction
             {
                 TxnHash = txnHash,
                 Target = input.Target,
-                Amount = input.Amount,
-                Signature = input.Signature,
+                Method = input.Method,
                 Data = input.Data,
                 Eta = input.Eta
             });

@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using AElf.Contracts.MultiToken;
 using AElf.Kernel;
 using AElf.Types;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Shouldly;
 using Xunit;
@@ -28,13 +29,14 @@ namespace AElf.Contracts.Timelock
         }
 
         [Fact]
-        public async Task AcceptAdminTests()
+        public async Task NewAdminTests()
         {
             await InitializeTests();
-            SetPendingAdminInput input = new SetPendingAdminInput();
-            input.PendingAdmin = UserAddress;
-            await TimelockContractStub.SetPendingAdmin.SendAsync(input);
-            await TimelockContractStub.AcceptAdmin.SendAsync(new Empty());
+            ChangeAdminInput changeAdminInput = new ChangeAdminInput
+            {
+                NewAdmin = UserAddress
+            };
+            await TimelockContractStub.ChangeAdmin.SendAsync(changeAdminInput);
             var result = await TimelockContractStub.GetAdmin.CallAsync(new Empty());
             result.ShouldBe(UserAddress);
         }
@@ -43,16 +45,21 @@ namespace AElf.Contracts.Timelock
         public async Task QueueTransactionTests()
         {
             await InitializeTests();
-            TransactionInput input = new TransactionInput
+            TransferInput transferInput = new TransferInput
+            {
+                To = UserAddress,
+                Symbol = "ELF",
+                Amount = 100
+            };
+            TransactionInput transactionInput = new TransactionInput
             {
                 Target = UserAddress,
-                Amount = 3L,
-                Data = "",
+                Method = "Transfer",
+                Data = transferInput.ToByteString(),
                 Eta = TimestampHelper.GetUtcNow(),
-                Signature = "sign"
             };
-            Hash txnHash = HashHelper.ComputeFrom(input);
-            await TimelockContractStub.QueueTransaction.SendAsync(input);
+            Hash txnHash = HashHelper.ComputeFrom(transactionInput);
+            await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
             var result = await TimelockContractStub.GetTransaction.CallAsync(txnHash);
             result.ShouldNotBeNull();
         }
@@ -61,17 +68,22 @@ namespace AElf.Contracts.Timelock
         public async Task CancelTransactionTests()
         {
             await InitializeTests();
-            TransactionInput input = new TransactionInput
+            TransferInput transferInput = new TransferInput
+            {
+                To = UserAddress,
+                Symbol = "ELF",
+                Amount = 100
+            };
+            TransactionInput transactionInput = new TransactionInput
             {
                 Target = UserAddress,
-                Amount = 3L,
-                Data = "",
+                Method = "Transfer",
+                Data = transferInput.ToByteString(),
                 Eta = TimestampHelper.GetUtcNow(),
-                Signature = "sign"
             };
-            Hash txnHash = HashHelper.ComputeFrom(input);
-            await TimelockContractStub.QueueTransaction.SendAsync(input);
-            await TimelockContractStub.CancelTransaction.SendAsync(input);
+            Hash txnHash = HashHelper.ComputeFrom(transactionInput);
+            await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
+            await TimelockContractStub.CancelTransaction.SendAsync(transactionInput);
             var result = await TimelockContractStub.GetTransaction.CallAsync(txnHash);
             result.ShouldBe(new Address());
         }
@@ -80,13 +92,13 @@ namespace AElf.Contracts.Timelock
         {
             await TokenContractStub.Transfer.SendAsync(new TransferInput
             {
-                To = DAppContractAddress,
+                To = ContractAddress,
                 Symbol = "ELF",
                 Amount = 1000_00000000
             });
             await TokenContractStub.Approve.SendAsync(new ApproveInput
             {
-                Spender = DAppContractAddress,
+                Spender = ContractAddress,
                 Symbol = "ELF",
                 Amount = 1000_00000000
             });
@@ -97,23 +109,34 @@ namespace AElf.Contracts.Timelock
         {
             await InitializeTests();
             await InitializeAsync();
-            TransactionInput input = new TransactionInput
+            var balance1 = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput 
             {
-                Target = UserAddress,
-                Amount = 5L,
-                Data = "",
-                Eta = TimestampHelper.GetUtcNow(),
-                Signature = "sign"
+                Owner = UserAddress, 
+                Symbol = "ELF"
+            });
+            _testOutputHelper.WriteLine(balance1.Balance.ToString());
+            TransferInput transferInput = new TransferInput
+            {
+                To = UserAddress,
+                Symbol = "ELF",
+                Amount = 500
             };
-            await TimelockContractStub.QueueTransaction.SendAsync(input);
-            await TimelockContractStub.ExecuteTransaction.SendAsync(input);
+            TransactionInput transactionInput = new TransactionInput
+            {
+                Target = TokenContractAddress,
+                Method = "Transfer",
+                Data = transferInput.ToByteString(),
+                Eta = TimestampHelper.GetUtcNow(),
+            };
+            await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
+            await TimelockContractStub.ExecuteTransaction.SendAsync(transactionInput);
             
             var balance2 = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput 
             {
                 Owner = UserAddress, 
                 Symbol = "ELF"
             });
-            balance2.Balance.ShouldBe(5L);
+            balance2.Balance.ShouldBe(500L);
         }
         
     }

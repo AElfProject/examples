@@ -13,6 +13,8 @@ namespace AElf.Contracts.Timelock
         // private readonly ECKeyPair KeyPair;
         internal TimelockContractContainer.TimelockContractStub TimelockContractStub;
         internal TokenContractContainer.TokenContractStub TokenContractStub;
+
+        protected Address TokenContractAddress;
         protected ECKeyPair DefaultKeyPair => Accounts[0].KeyPair;
         protected Address DefaultAddress => Accounts[0].Address;
         protected ECKeyPair UserKeyPair => Accounts[1].KeyPair;
@@ -23,8 +25,8 @@ namespace AElf.Contracts.Timelock
             _testOutputHelper = testOutputHelper;
             // KeyPair = SampleAccount.Accounts.First().KeyPair;
             TimelockContractStub = GetContractStub<TimelockContractContainer.TimelockContractStub>(DefaultKeyPair);
-            TokenContractStub = GetTester<TokenContractContainer.TokenContractStub>(
-                GetAddress(TokenSmartContractAddressNameProvider.StringName), DefaultKeyPair);
+            TokenContractAddress = GetAddress(TokenSmartContractAddressNameProvider.StringName);
+            TokenContractStub = GetTester<TokenContractContainer.TokenContractStub>(TokenContractAddress, DefaultKeyPair);
         }
     }
     

@@ -3,15 +3,17 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>AElf.Contracts.Timelock</RootNamespace>
-        <RestoreSources>http://10.0.1.239:8081/repository/nuget-group/index.json</RestoreSources>
     </PropertyGroup>
 
     <PropertyGroup>
         <NoWarn>0436</NoWarn>
     </PropertyGroup>
+    <PropertyGroup>
+        <ObjPath>$(OutputPath)obj/$(Configuration)/$(TargetFramework)/</ObjPath>
+    </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AElf.Boilerplate.TestBase" Version="0.0.1" />
+        <PackageReference Include="AElf.Testing.TestBase" Version="1.0.0" />
         <PackageReference Include="AElf.EconomicSystem" Version="1.3.0" />
         <PackageReference Include="AElf.GovernmentSystem" Version="1.3.0" />
         <PackageReference Include="coverlet.msbuild" Version="2.5.1" />
@@ -21,7 +23,7 @@
         <PackageReference Include="xunit.runner.console" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.1" />
         <PackageReference Include="AElf.ContractTestKit" Version="1.3.0" />
-        <PackageReference Include="AElf.Tools" Version="0.0.1">
+        <PackageReference Include="AElf.Tools" Version="1.0.2">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -40,44 +42,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\src\AElf.Contracts.TimelockContract.csproj" />
+        <Compile Include="$(ObjPath)Protobuf/**/*.cs" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <Content Include="obj\AElf.Contracts.TimelockContract.Tests.csproj.nuget.dgspec.json" />
-      <Content Include="obj\AElf.Contracts.TimelockContract.Tests.csproj.nuget.g.props" />
-      <Content Include="obj\AElf.Contracts.TimelockContract.Tests.csproj.nuget.g.targets" />
-      <Content Include="obj\Debug\net6.0\1815de10cd375fe2_timelock_contract.protodep" />
-      <Content Include="obj\Debug\net6.0\1815de10cd375fe2_token_contract.protodep" />
-      <Content Include="obj\Debug\net6.0\1f66cb475763062f_acs1.protodep" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.AssemblyInfoInputs.cache" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.assets.cache" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.AssemblyReference.cache" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.CopyComplete" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.CoreCompileInputs.cache" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.csproj.FileListAbsolute.txt" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.dll" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.GeneratedMSBuildEditorConfig.editorconfig" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.genruntimeconfig.cache" />
-      <Content Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.pdb" />
-      <Content Include="obj\Debug\net6.0\c3e4ef2a4648ba32_authority_info.protodep" />
-      <Content Include="obj\Debug\net6.0\refint\AElf.Contracts.TimelockContract.Tests.dll" />
-      <Content Include="obj\Debug\net6.0\ref\AElf.Contracts.TimelockContract.Tests.dll" />
-      <Content Include="obj\project.assets.json" />
-      <Content Include="obj\project.nuget.cache" />
+        <ProjectReference Include="../src/AElf.Contracts.TimelockContract.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Compile Include="obj\Debug\net6.0\.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" />
-      <Compile Include="obj\Debug\net6.0\AElf.Contracts.TimelockContract.Tests.AssemblyInfo.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\base\Acs1.c.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\base\Acs1.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\message\AuthorityInfo.c.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\message\AuthorityInfo.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TimelockContract.c.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TimelockContract.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TokenContract.c.cs" />
-      <Compile Include="obj\Debug\net6.0\Protobuf\stub\TokenContract.cs" />
-    </ItemGroup>
-
+    
 </Project>
