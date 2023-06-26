@@ -18,7 +18,7 @@ service TimelockContract {
   }
   rpc ChangeAdmin (ChangeAdminInput) returns (google.protobuf.Empty) {
   }
-  rpc QueueTransaction (TransactionInput) returns (google.protobuf.Empty) {
+  rpc QueueTransaction (TransactionInput) returns (aelf.Hash) {
   }
   rpc ExecuteTransaction (TransactionInput) returns (google.protobuf.Empty) {
   }
@@ -32,7 +32,7 @@ service TimelockContract {
   rpc GetAdmin (google.protobuf.Empty) returns (aelf.Address) {
     option (aelf.is_view) = true;
   }
-  rpc GetTransaction(aelf.Hash) returns (aelf.Address) {
+  rpc GetTransaction(aelf.Hash) returns (google.protobuf.BoolValue) {
     option (aelf.is_view) = true;
   }
 }
@@ -43,7 +43,7 @@ message DelayInput {
 }
 
 message ChangeAdminInput {
-  aelf.Address new_admin = 1;
+  aelf.Address admin = 1;
 }
 
 message TransactionInput {
@@ -57,7 +57,7 @@ message TransactionInput {
 // Events
 message NewAdmin {
   option (aelf.is_event) = true;
-  aelf.Address new_admin = 1;
+  aelf.Address admin = 1;
 }
 
 message NewDelay {

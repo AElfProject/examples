@@ -18,10 +18,13 @@ namespace AElf.Contracts.Timelock
         {
             return State.Admin.Value;
         }
-        
-        public override Address GetTransaction(Hash input)
+
+        public override BoolValue GetTransaction(Hash input)
         {
-            return State.TransactionQueue[input];
+            return new BoolValue
+            {
+                Value = State.TransactionQueue[input]
+            };
         }
     }
     

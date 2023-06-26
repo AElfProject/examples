@@ -38,21 +38,21 @@ namespace AElf.Contracts.Timelock
         public override Empty ChangeAdmin(ChangeAdminInput input)
         {
             Assert(Context.Sender == Context.Self, "No permission");
-            Assert(input.NewAdmin != null, "NewAdmin must not be null");
-            State.Admin.Value = input.NewAdmin;
+            Assert(input.Admin != null, "NewAdmin must not be null");
+            State.Admin.Value = input.Admin;
             Context.Fire(new NewAdmin
             {
-                NewAdmin_ = State.Admin.Value
+                Admin = State.Admin.Value
             });
             return new Empty();
         }
 
-        public override Empty QueueTransaction(TransactionInput input)
+        public override Hash QueueTransaction(TransactionInput input)
         {
             Assert(Context.Sender == State.Admin.Value, "No permission");
-            Assert(input.Eta >= Context.CurrentBlockTime.AddDays(State.Delay.Value), "Estimated execution block must satisfy delay");
+            Assert(input.Eta >= Context.CurrentBlockTime.AddSeconds(State.Delay.Value), "Estimated execution block must satisfy delay");
             Hash txnHash = HashHelper.ComputeFrom(input);
-            State.TransactionQueue[txnHash] = Context.Sender;
+            State.TransactionQueue[txnHash] = true;
             Context.Fire(new QueueTransaction
             {
                 TxnHash = txnHash,
@@ -61,7 +61,7 @@ namespace AElf.Contracts.Timelock
                 Data = input.Data,
                 Eta = input.Eta
             });
-            return new Empty();
+            return txnHash;
         }
 
         public override Empty CancelTransaction(TransactionInput input)
@@ -84,11 +84,11 @@ namespace AElf.Contracts.Timelock
         {
             Assert(Context.Sender == State.Admin.Value, "No permission");
             Hash txnHash = HashHelper.ComputeFrom(input);
-            Assert(State.TransactionQueue[txnHash] != null, "executeTransaction: Transaction hasn't been queued");
+            Assert(State.TransactionQueue[txnHash], "executeTransaction: Transaction hasn't been queued");
             Assert(Context.CurrentBlockTime >= input.Eta, "executeTransaction: Transaction hasn't surpassed time lock");
-            Assert(Context.CurrentBlockTime <= input.Eta.AddDays(TimelockContractConstants.GRACE_PERIOD), "executeTransaction: Transaction is stale");
+            Assert(Context.CurrentBlockTime <= input.Eta.AddSeconds(TimelockContractConstants.GRACE_PERIOD), "executeTransaction: Transaction is stale");
 
-            Address from = State.TransactionQueue[txnHash];
+            State.TransactionQueue[txnHash] = false;
             Context.SendInline(input.Target, input.Method, input.Data);
             Context.Fire(new ExecuteTransaction
             {

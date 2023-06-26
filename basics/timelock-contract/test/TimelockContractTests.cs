@@ -23,10 +23,10 @@ namespace AElf.Contracts.Timelock
         {
             await InitializeTests();
             DelayInput input = new DelayInput();
-            input.Delay = 3L;
+            input.Delay = 2 * 24 * 60 * 60;
             await TimelockContractStub.SetDelay.SendAsync(input);
             var result = await TimelockContractStub.GetDelay.CallAsync(new Empty());
-            result.Value.ShouldBe(3L);
+            result.Value.ShouldBe(2 * 24 * 60 * 60);
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace AElf.Contracts.Timelock
             await InitializeTests();
             ChangeAdminInput changeAdminInput = new ChangeAdminInput
             {
-                NewAdmin = UserAddress
+                Admin = UserAddress
             };
             await TimelockContractStub.ChangeAdmin.SendAsync(changeAdminInput);
             var result = await TimelockContractStub.GetAdmin.CallAsync(new Empty());
@@ -62,7 +62,12 @@ namespace AElf.Contracts.Timelock
             Hash txnHash = HashHelper.ComputeFrom(transactionInput);
             await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
             var result = await TimelockContractStub.GetTransaction.CallAsync(txnHash);
-            result.ShouldNotBeNull();
+            var expectResult = new BoolValue
+            {
+                Value = true
+            };
+            result.ShouldBe(expectResult);
+            _testOutputHelper.WriteLine(txnHash.ToString());
         }
 
         [Fact]
@@ -86,7 +91,11 @@ namespace AElf.Contracts.Timelock
             await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
             await TimelockContractStub.CancelTransaction.SendAsync(transactionInput);
             var result = await TimelockContractStub.GetTransaction.CallAsync(txnHash);
-            result.ShouldBe(new Address());
+            var expectResult = new BoolValue
+            {
+                Value = false
+            };
+            result.ShouldBe(expectResult);
         }
         
         private async Task InitializeAsync()
@@ -105,6 +114,9 @@ namespace AElf.Contracts.Timelock
             });
         }
         
+        /**
+         * Because of time lock limit, need to comment out the assert of the ExecuteTransaction method.
+         */
         [Fact]
         public async Task ExecuteTransactionTests()
         {
@@ -137,7 +149,7 @@ namespace AElf.Contracts.Timelock
                 Data = transferFromInput.ToByteString(),
                 Eta = TimestampHelper.GetUtcNow(),
             };
-            await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
+            var txnHash = await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
             await TimelockContractStub.ExecuteTransaction.SendAsync(transactionInput);
             
             var balance2 = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput 
@@ -152,6 +164,12 @@ namespace AElf.Contracts.Timelock
             });
             balance2.Balance.ShouldBe(502);
             balance3.Balance.ShouldBe(balance1.Balance.Sub(502));
+            var result = await TimelockContractStub.GetTransaction.CallAsync(txnHash.Output);
+            var expectResult = new BoolValue
+            {
+                Value = false
+            };
+            result.ShouldBe(expectResult);
         }
         
     }
