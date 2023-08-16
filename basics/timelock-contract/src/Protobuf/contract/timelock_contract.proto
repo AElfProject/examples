@@ -12,9 +12,7 @@ service TimelockContract {
   option (aelf.csharp_state) = "AElf.Contracts.Timelock.TimelockContractState";
 
   // Actions
-  rpc Initialize (google.protobuf.Empty) returns (google.protobuf.Empty) {
-  }
-  rpc SetDelay (DelayInput) returns (google.protobuf.Empty) {
+  rpc Initialize (InitializeInput) returns (google.protobuf.Empty) {
   }
   rpc ChangeAdmin (ChangeAdminInput) returns (google.protobuf.Empty) {
   }
@@ -26,7 +24,7 @@ service TimelockContract {
   }
 
   // View
-  rpc GetDelay (google.protobuf.Empty) returns (google.protobuf.Int64Value) {
+  rpc GetDelay (google.protobuf.Empty) returns (google.protobuf.UInt64Value) {
     option (aelf.is_view) = true;
   }
   rpc GetAdmin (google.protobuf.Empty) returns (aelf.Address) {
@@ -38,7 +36,7 @@ service TimelockContract {
 }
 
 // Params
-message DelayInput {
+message InitializeInput {
   uint64 delay = 1;
 }
 
@@ -51,7 +49,7 @@ message TransactionInput {
   aelf.Address target = 2;
   string method = 3;
   bytes data = 4;
-  google.protobuf.Timestamp eta = 5;
+  google.protobuf.Timestamp execute_time = 5;
 }
 
 // Events
@@ -71,7 +69,7 @@ message QueueTransaction {
   aelf.Address target = 2;
   string method = 3;
   bytes data = 4; // data equivalent to ConvertToByteString(IMessage)
-  google.protobuf.Timestamp eta = 5;
+  google.protobuf.Timestamp execute_time = 5;
 }
 
 message ExecuteTransaction {
@@ -80,7 +78,7 @@ message ExecuteTransaction {
   aelf.Address target = 2;
   string method = 3;
   bytes data = 4;
-  google.protobuf.Timestamp eta = 5;
+  google.protobuf.Timestamp execute_time = 5;
 }
 
 message CancelTransaction {
@@ -89,5 +87,5 @@ message CancelTransaction {
   aelf.Address target = 2;
   string method = 3;
   bytes data = 4;
-  google.protobuf.Timestamp eta = 5;
+  google.protobuf.Timestamp execute_time = 5;
 }

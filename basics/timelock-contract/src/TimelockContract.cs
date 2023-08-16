@@ -7,37 +7,21 @@ namespace AElf.Contracts.Timelock
 {
     public partial class TimelockContract : TimelockContractContainer.TimelockContractBase
     {
-        public override Empty Initialize(Empty input)
+        public override Empty Initialize(InitializeInput input)
         {
             if (State.Initialized.Value)
             {
                 return new Empty();
             }
-            State.TokenContract.Value =
-                Context.GetContractAddressByName(SmartContractConstants.TokenContractSystemName);
             State.Admin.Value = Context.Sender;
+            State.Delay.Value = input.Delay;
             State.Initialized.Value = true;
-            return new Empty();
-        }
-        
-        public override Empty SetDelay(DelayInput input)
-        {
-            Assert(State.Admin.Value == Context.Sender, "No permission");
-            Assert(input != null, "Delay must not be null");
-            Assert(input.Delay >= TimelockContractConstants.MIN_DELAY, "Delay must exceed minimum delay");
-            Assert(input.Delay <= TimelockContractConstants.MAX_DELAY, "Delay must exceed maximum delay");
-            State.Delay.Value = (long) input.Delay;
-
-            Context.Fire(new NewDelay
-            {
-                NewDelay_ = input.Delay
-            });
             return new Empty();
         }
 
         public override Empty ChangeAdmin(ChangeAdminInput input)
         {
-            Assert(Context.Sender == Context.Self, "No permission");
+            Assert(Context.Sender == State.Admin.Value, "No permission");
             Assert(input.Admin != null, "NewAdmin must not be null");
             State.Admin.Value = input.Admin;
             Context.Fire(new NewAdmin
@@ -50,7 +34,7 @@ namespace AElf.Contracts.Timelock
         public override Hash QueueTransaction(TransactionInput input)
         {
             Assert(Context.Sender == State.Admin.Value, "No permission");
-            Assert(input.Eta >= Context.CurrentBlockTime.AddSeconds(State.Delay.Value), "Estimated execution block must satisfy delay");
+            Assert(input.ExecuteTime >= Context.CurrentBlockTime.AddSeconds((long) State.Delay.Value), "Estimated execution block must satisfy delay");
             Hash txnHash = HashHelper.ComputeFrom(input);
             State.TransactionQueue[txnHash] = true;
             Context.Fire(new QueueTransaction
@@ -59,7 +43,7 @@ namespace AElf.Contracts.Timelock
                 Target = input.Target,
                 Method = input.Method,
                 Data = input.Data,
-                Eta = input.Eta
+                ExecuteTime = input.ExecuteTime
             });
             return txnHash;
         }
@@ -75,7 +59,7 @@ namespace AElf.Contracts.Timelock
                 Target = input.Target,
                 Method = input.Method,
                 Data = input.Data,
-                Eta = input.Eta
+                ExecuteTime = input.ExecuteTime
             });
             return new Empty();
         }
@@ -85,9 +69,9 @@ namespace AElf.Contracts.Timelock
             Assert(Context.Sender == State.Admin.Value, "No permission");
             Hash txnHash = HashHelper.ComputeFrom(input);
             Assert(State.TransactionQueue[txnHash], "executeTransaction: Transaction hasn't been queued");
-            Assert(Context.CurrentBlockTime >= input.Eta, "executeTransaction: Transaction hasn't surpassed time lock");
-            Assert(Context.CurrentBlockTime <= input.Eta.AddSeconds(TimelockContractConstants.GRACE_PERIOD), "executeTransaction: Transaction is stale");
-
+            Assert(Context.CurrentBlockTime >= input.ExecuteTime, "executeTransaction: Transaction hasn't surpassed time lock");
+            Assert(Context.CurrentBlockTime <= input.ExecuteTime.AddSeconds(TimelockContractConstants.GRACE_PERIOD), "executeTransaction: Transaction is stale");
+            
             State.TransactionQueue[txnHash] = false;
             Context.SendInline(input.Target, input.Method, input.Data);
             Context.Fire(new ExecuteTransaction
@@ -96,7 +80,7 @@ namespace AElf.Contracts.Timelock
                 Target = input.Target,
                 Method = input.Method,
                 Data = input.Data,
-                Eta = input.Eta
+                ExecuteTime = input.ExecuteTime
             });
             State.TransactionQueue.Remove(txnHash);
             return new Empty();

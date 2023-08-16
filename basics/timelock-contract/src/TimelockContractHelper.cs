@@ -5,9 +5,9 @@ namespace AElf.Contracts.Timelock
 {
     public partial class TimelockContract
     {
-        public override Int64Value GetDelay(Empty input)
+        public override UInt64Value GetDelay(Empty input)
         {
-            var delay = new Int64Value
+            var delay = new UInt64Value
             {
                 Value = State.Delay.Value
             };
