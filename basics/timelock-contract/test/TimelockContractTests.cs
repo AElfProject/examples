@@ -42,17 +42,19 @@ namespace AElf.Contracts.Timelock
         public async Task QueueTransactionTests()
         {
             await InitializeTests();
-            TransferInput transferInput = new TransferInput
+            TransferFromInput transferFromInput = new TransferFromInput
             {
+                From = DefaultAddress,
                 To = UserAddress,
+                Amount = 502,
                 Symbol = "ELF",
-                Amount = 100
+                Memo = "TEST"
             };
             TransactionInput transactionInput = new TransactionInput
             {
-                Target = UserAddress,
-                Method = "Transfer",
-                Data = transferInput.ToByteString(),
+                Target = TokenContractAddress,
+                Method = "TransferFrom",
+                Data = transferFromInput.ToByteString(),
                 ExecuteTime = _currentTime.AddSeconds(10)
             };
             Hash txnHash = HashHelper.ComputeFrom(transactionInput);
@@ -69,17 +71,19 @@ namespace AElf.Contracts.Timelock
         public async Task CancelTransactionTests()
         {
             await InitializeTests();
-            TransferInput transferInput = new TransferInput
+            TransferFromInput transferFromInput = new TransferFromInput
             {
+                From = DefaultAddress,
                 To = UserAddress,
+                Amount = 502,
                 Symbol = "ELF",
-                Amount = 100
+                Memo = "TEST"
             };
             TransactionInput transactionInput = new TransactionInput
             {
-                Target = UserAddress,
-                Method = "Transfer",
-                Data = transferInput.ToByteString(),
+                Target = TokenContractAddress,
+                Method = "TransferFrom",
+                Data = transferFromInput.ToByteString(),
                 ExecuteTime = _currentTime.AddSeconds(10)
             };
             Hash txnHash = HashHelper.ComputeFrom(transactionInput);
@@ -122,12 +126,6 @@ namespace AElf.Contracts.Timelock
                 Owner = DefaultAddress, 
                 Symbol = "ELF"
             });
-            TransferInput transferInput = new TransferInput
-            {
-                To = UserAddress,
-                Symbol = "ELF",
-                Amount = 502
-            };
             TransferFromInput transferFromInput = new TransferFromInput
             {
                 From = DefaultAddress,
