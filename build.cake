@@ -5,9 +5,8 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var rootPath     = "./";
 var srcPath      = rootPath + "src/";
-var contractPath = rootPath + "contract/";
 var testPath     = rootPath + "test/";
-var solution     = rootPath + "TimelockContract.sln";
+var solution     = rootPath + "ExampleContract.sln";
 
 Task("Clean")
     .Description("clean up project cache")
@@ -15,8 +14,6 @@ Task("Clean")
 {
     CleanDirectories(srcPath + "**/bin");
     CleanDirectories(srcPath + "**/obj");
-    CleanDirectories(contractPath + "**/bin");
-    CleanDirectories(contractPath + "**/obj");
     CleanDirectories(testPath + "**/bin");
     CleanDirectories(testPath + "**/obj");
 });
