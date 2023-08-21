@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "basics", "basics", "{0B1211B7-ADC5-4934-9573-D19E429C7178}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "timelock-contract", "timelock-contract", "{2F26B697-A6FE-4A9F-A7DB-756E364B7BD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TimelockContract", "basics\timelock-contract\src\AElf.Contracts.TimelockContract.csproj", "{ECC2BE86-A75D-4526-B10B-A12915EEEEFC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AElf.Contracts.TimelockContract.Tests", "basics\timelock-contract\test\AElf.Contracts.TimelockContract.Tests.csproj", "{FFFB1BAF-52A1-4773-83BE-2BA1ED34D745}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ECC2BE86-A75D-4526-B10B-A12915EEEEFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC2BE86-A75D-4526-B10B-A12915EEEEFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC2BE86-A75D-4526-B10B-A12915EEEEFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC2BE86-A75D-4526-B10B-A12915EEEEFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFFB1BAF-52A1-4773-83BE-2BA1ED34D745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFFB1BAF-52A1-4773-83BE-2BA1ED34D745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFFB1BAF-52A1-4773-83BE-2BA1ED34D745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFFB1BAF-52A1-4773-83BE-2BA1ED34D745}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2F26B697-A6FE-4A9F-A7DB-756E364B7BD8} = {0B1211B7-ADC5-4934-9573-D19E429C7178}
+		{ECC2BE86-A75D-4526-B10B-A12915EEEEFC} = {2F26B697-A6FE-4A9F-A7DB-756E364B7BD8}
+		{FFFB1BAF-52A1-4773-83BE-2BA1ED34D745} = {2F26B697-A6FE-4A9F-A7DB-756E364B7BD8}
+	EndGlobalSection
+EndGlobal
