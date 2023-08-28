@@ -35,10 +35,10 @@ jobs:
     displayName: 'Install .NET Core SDK'
     inputs:
       version: 3.1.102
-  - script: bash scripts/download_binary.sh
-    displayName: 'Download AElf build tools'
-  - script: bash scripts/install.sh
-    displayName: 'Install protobuf'
+#  - script: bash scripts/download_binary.sh
+#    displayName: 'Download AElf build tools'
+#  - script: bash scripts/install.sh
+#    displayName: 'Install protobuf'
   - script: bash build.sh --target=Test-with-Codecov
     displayName: 'Build and Test'
   - task: PublishTestResults@2
