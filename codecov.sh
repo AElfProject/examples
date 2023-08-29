@@ -8,5 +8,5 @@ do
     echo ${name}
     dotnet test ${name} --logger trx --settings CodeCoverage.runsettings --collect:"XPlat Code Coverage"
 done
-reportgenerator ./basics/timelock-contract/test/TestResults/*/coverage.cobertura.xml -reports:./basics/timelock-contract/test/TestResults/*/coverage.cobertura.xml -targetdir:./CodeCoverage -reporttypes:Cobertura -assemblyfilters:-xunit*
+reportgenerator /basics/timelock-contract/test/TestResults/*/coverage.cobertura.xml -reports:./basics/timelock-contract/test/TestResults/*/coverage.cobertura.xml -targetdir:./CodeCoverage -reporttypes:Cobertura -assemblyfilters:-xunit*
 codecov -f ./CodeCoverage/Cobertura.xml -t ${TOKEN}
