@@ -57,6 +57,7 @@ jobs:
       assemblyfilters: '-xunit*'
   - script: bash build.sh --target=Upload-Coverage-Azure
     displayName: 'Upload data to Codecov'
+    condition: eq(variables['system.debug'], true)
     
 # All tasks on macOS
 #- job: build_all_darwin
