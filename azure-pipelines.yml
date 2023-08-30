@@ -30,15 +30,13 @@ jobs:
   timeoutInMinutes: 120
   pool:
     vmImage: ubuntu-latest
+  variables:
+    CI_TEST: true
   steps:
   - task: UseDotNet@2
     displayName: 'Install .NET Core SDK'
     inputs:
-      version: 3.1.102
-  - script: bash scripts/download_binary.sh
-    displayName: 'Download AElf build tools'
-  - script: bash scripts/install.sh
-    displayName: 'Install protobuf'
+      version: 7.0.x
   - script: bash build.sh --target=Test-with-Codecov
     displayName: 'Build and Test'
   - task: PublishTestResults@2
@@ -46,10 +44,10 @@ jobs:
     inputs:
       testRunner: VSTest
       testResultsFiles: '**/*.trx'
-  - task: Palmmedia.reportgenerator.reportgenerator-build-release-task.reportgenerator@4
+  - task: reportgenerator@5
     displayName: ReportGenerator
     inputs:
-      reports: '$(Build.SourcesDirectory)/test/*/TestResults/*/coverage.cobertura.xml'
+      reports: '$(Build.SourcesDirectory)/basics/timelock-contract/test/TestResults/*/coverage.cobertura.xml'
       targetdir: '$(Build.SourcesDirectory)/CodeCoverage'
       reporttypes: 'Cobertura'
       assemblyfilters: '-xunit*'

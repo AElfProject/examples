@@ -1,11 +1,11 @@
-#tool dotnet:?package=Codecov.Tool&version=1.13.0
-#addin nuget:?package=Cake.Codecov&version=1.0.1
+#tool nuget:?package=Codecov
+#addin nuget:?package=Cake.Codecov&version=0.8.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var rootPath     = "./";
-var srcPath      = rootPath + "src/";
-var testPath     = rootPath + "test/";
+var srcPath      = rootPath + "basics/timelock-contract/src/";
+var testPath     = rootPath + "basics/timelock-contract/test/";
 var solution     = rootPath + "ExampleContract.sln";
 
 Task("Clean")
@@ -61,7 +61,7 @@ Task("Test-with-Codecov")
                         .Append("--collect:\"XPlat Code Coverage\"");
                 }                  
     };
-    var testProjects = GetFiles("./test/*.Tests/*.csproj");
+    var testProjects = GetFiles("./basics/timelock-contract/test/*.csproj");
     var testProjectList = testProjects.OrderBy(p=>p.FullPath).ToList();
     foreach(var testProject in testProjectList)
     {
