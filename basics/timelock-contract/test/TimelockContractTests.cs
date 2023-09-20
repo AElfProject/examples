@@ -20,22 +20,59 @@ namespace AElf.Contracts.Timelock
         {
             InitializeInput input = new InitializeInput
             {
-                Delay = 5
+                Delay = 2 * 24 * 60 * 60
             };
             await TimelockContractStub.Initialize.SendAsync(input);
         }
         
         [Fact]
-        public async Task NewAdminTests()
+        public async Task ChangeAdminTests()
         {
             await InitializeTests();
-            ChangeAdminInput changeAdminInput = new ChangeAdminInput
+            var address = await TimelockContractStub.GetAdmin.CallAsync(new Empty());
+            address.ShouldBe(DefaultAddress);
+            ChangeAdminInput changeAdminInput = new ChangeAdminInput()
             {
                 Admin = UserAddress
             };
-            await TimelockContractStub.ChangeAdmin.SendAsync(changeAdminInput);
-            var result = await TimelockContractStub.GetAdmin.CallAsync(new Empty());
-            result.ShouldBe(UserAddress);
+            TransactionInput transactionInput = new TransactionInput
+            {
+                Target = ContractAddress,
+                Method = "ChangeAdmin",
+                Data = changeAdminInput.ToByteString(),
+                ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
+            };
+            var txnHash = await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
+            BlockTimeProvider.SetBlockTime(_currentTime.AddSeconds(3 * 24 * 60 * 60));
+            await TimelockContractStub.ExecuteTransaction.SendAsync(transactionInput);
+            
+            var addressAfter = await TimelockContractStub.GetAdmin.CallAsync(new Empty());
+            addressAfter.ShouldBe(UserAddress);
+        }
+        
+        [Fact]
+        public async Task SetDelayTests()
+        {
+            await InitializeTests();
+            UInt64Value delay = await TimelockContractStub.GetDelay.CallAsync(new Empty());
+            delay.Value.ShouldBe((uint)(2 * 24 * 60 * 60));
+            SetDelayInput setDelayInput = new SetDelayInput
+            {
+                Delay = 4 * 24 * 60 * 60
+            };
+            TransactionInput transactionInput = new TransactionInput
+            {
+                Target = ContractAddress,
+                Method = "SetDelay",
+                Data = setDelayInput.ToByteString(),
+                ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
+            };
+            var txnHash = await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
+            BlockTimeProvider.SetBlockTime(_currentTime.AddSeconds(3 * 24 * 60 * 60));
+            await TimelockContractStub.ExecuteTransaction.SendAsync(transactionInput);
+            
+            UInt64Value delayAfter = await TimelockContractStub.GetDelay.CallAsync(new Empty());
+            delayAfter.Value.ShouldBe((uint)(4 * 24 * 60 * 60));
         }
         
         [Fact]
@@ -55,7 +92,7 @@ namespace AElf.Contracts.Timelock
                 Target = TokenContractAddress,
                 Method = "TransferFrom",
                 Data = transferFromInput.ToByteString(),
-                ExecuteTime = _currentTime.AddSeconds(10)
+                ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
             };
             Hash txnHash = HashHelper.ComputeFrom(transactionInput);
             await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
@@ -84,7 +121,7 @@ namespace AElf.Contracts.Timelock
                 Target = TokenContractAddress,
                 Method = "TransferFrom",
                 Data = transferFromInput.ToByteString(),
-                ExecuteTime = _currentTime.AddSeconds(10)
+                ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
             };
             Hash txnHash = HashHelper.ComputeFrom(transactionInput);
             await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
@@ -139,10 +176,10 @@ namespace AElf.Contracts.Timelock
                 Target = TokenContractAddress,
                 Method = "TransferFrom",
                 Data = transferFromInput.ToByteString(),
-                ExecuteTime = _currentTime.AddSeconds(10)
+                ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
             };
             var txnHash = await TimelockContractStub.QueueTransaction.SendAsync(transactionInput);
-            BlockTimeProvider.SetBlockTime(_currentTime.AddSeconds(10));
+            BlockTimeProvider.SetBlockTime(_currentTime.AddSeconds(3 * 24 * 60 * 60));
             await TimelockContractStub.ExecuteTransaction.SendAsync(transactionInput);
             
             var balance2 = await TokenContractStub.GetBalance.CallAsync(new GetBalanceInput 

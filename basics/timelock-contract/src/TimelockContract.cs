@@ -9,6 +9,8 @@ namespace AElf.Contracts.Timelock
     {
         public override Empty Initialize(InitializeInput input)
         {
+            Assert(input.Delay <= TimelockContractConstants.MAX_DELAY, "Delay must not exceed maximum delay");
+            Assert(input.Delay >= TimelockContractConstants.MIN_DELAY, "Delay must exceed minimum delay");
             if (State.Initialized.Value)
             {
                 return new Empty();
@@ -21,12 +23,25 @@ namespace AElf.Contracts.Timelock
 
         public override Empty ChangeAdmin(ChangeAdminInput input)
         {
-            Assert(Context.Sender == State.Admin.Value, "No permission");
+            Assert(Context.Sender == Context.Self, "No permission");
             Assert(input.Admin != null, "NewAdmin must not be null");
             State.Admin.Value = input.Admin;
             Context.Fire(new NewAdmin
             {
                 Admin = State.Admin.Value
+            });
+            return new Empty();
+        }
+
+        public override Empty SetDelay(SetDelayInput input)
+        {
+            Assert(Context.Sender == Context.Self, "No permission");
+            Assert(input.Delay <= TimelockContractConstants.MAX_DELAY, "Delay must not exceed maximum delay");
+            Assert(input.Delay >= TimelockContractConstants.MIN_DELAY, "Delay must exceed minimum delay");
+            State.Delay.Value = input.Delay;
+            Context.Fire(new NewDelay
+            {
+                Delay = State.Delay.Value
             });
             return new Empty();
         }
@@ -39,7 +54,6 @@ namespace AElf.Contracts.Timelock
             State.TransactionQueue[txnHash] = true;
             Context.Fire(new QueueTransaction
             {
-                TxnHash = txnHash,
                 Target = input.Target,
                 Method = input.Method,
                 Data = input.Data,
@@ -52,10 +66,9 @@ namespace AElf.Contracts.Timelock
         {
             Assert(Context.Sender == State.Admin.Value, "No permission");
             Hash txnHash = HashHelper.ComputeFrom(input);
-            State.TransactionQueue.Remove(txnHash);
+            State.TransactionQueue[txnHash] = false;
             Context.Fire(new CancelTransaction
             {
-                TxnHash = txnHash,
                 Target = input.Target,
                 Method = input.Method,
                 Data = input.Data,
@@ -76,13 +89,11 @@ namespace AElf.Contracts.Timelock
             Context.SendInline(input.Target, input.Method, input.Data);
             Context.Fire(new ExecuteTransaction
             {
-                TxnHash = txnHash,
                 Target = input.Target,
                 Method = input.Method,
                 Data = input.Data,
                 ExecuteTime = input.ExecuteTime
             });
-            State.TransactionQueue.Remove(txnHash);
             return new Empty();
         }
     }
