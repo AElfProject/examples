@@ -9,12 +9,12 @@ namespace AElf.Contracts.Timelock
     {
         public override Empty Initialize(InitializeInput input)
         {
+            Assert(!State.Initialized.Value, "Already initialized.");
+            State.GenesisContract.Value = Context.GetZeroSmartContractAddress();
+            var author = State.GenesisContract.GetContractAuthor.Call(Context.Self);
+            Assert(author == Context.Sender, "No permission.");
             Assert(input.Delay <= TimelockContractConstants.MAX_DELAY, "Delay must not exceed maximum delay");
             Assert(input.Delay >= TimelockContractConstants.MIN_DELAY, "Delay must exceed minimum delay");
-            if (State.Initialized.Value)
-            {
-                return new Empty();
-            }
             State.Admin.Value = Context.Sender;
             State.Delay.Value = input.Delay;
             State.Initialized.Value = true;

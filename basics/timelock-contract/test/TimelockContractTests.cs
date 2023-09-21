@@ -37,7 +37,7 @@ namespace AElf.Contracts.Timelock
             };
             TransactionInput transactionInput = new TransactionInput
             {
-                Target = ContractAddress,
+                Target = TimelockContractAddress,
                 Method = "ChangeAdmin",
                 Data = changeAdminInput.ToByteString(),
                 ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
@@ -62,7 +62,7 @@ namespace AElf.Contracts.Timelock
             };
             TransactionInput transactionInput = new TransactionInput
             {
-                Target = ContractAddress,
+                Target = TimelockContractAddress,
                 Method = "SetDelay",
                 Data = setDelayInput.ToByteString(),
                 ExecuteTime = _currentTime.AddSeconds(3 * 24 * 60 * 60)
@@ -138,13 +138,13 @@ namespace AElf.Contracts.Timelock
         {
             await TokenContractStub.Transfer.SendAsync(new TransferInput
             {
-                To = ContractAddress,
+                To = TimelockContractAddress,
                 Symbol = "ELF",
                 Amount = 1000_00000000
             });
             await TokenContractStub.Approve.SendAsync(new ApproveInput
             {
-                Spender = ContractAddress,
+                Spender = TimelockContractAddress,
                 Symbol = "ELF",
                 Amount = 1000_00000000
             });
