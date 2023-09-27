@@ -51,11 +51,10 @@ message ChangeAdminInput {
 }
 
 message TransactionInput {
-  aelf.Hash txn_hash = 1;
-  aelf.Address target = 2;
-  string method = 3;
-  bytes data = 4;
-  google.protobuf.Timestamp execute_time = 5;
+  aelf.Address target = 1;
+  string method = 2;
+  bytes data = 3;
+  google.protobuf.Timestamp execute_time = 4;
 }
 
 // Events
